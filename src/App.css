@@ -123,3 +123,21 @@ margin-bottom: 20px;
 .sign-in{
   text-align: center;
 }
+
+.answer-option {
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.answer-option:hover {
+  background-color: #e0e0e0;
+}
+
+.answer-option.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

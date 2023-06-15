@@ -1,10 +1,8 @@
 import React from 'react';
 import { questions } from '../QuizData/QuizData';
 import Timer from './Timer';
-import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import Result from './Result';
-import { useEffect } from 'react';
 
 type QuizProps = {
     setStartTimer: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,15 +23,13 @@ type QuizProps = {
     const [selectedOption, setSelectedOption] = React.useState<number | null>(null);
     const [selectedOptions, setSelectedOptions] = React.useState<number[]>([]);
     const [correctAnswers, setCorrectAnswers] = React.useState<boolean[]>([]);
-  
-    const navigate = useNavigate();
-  
+
     function handleAns(isCorrect: boolean) {
       setTimeout(() => {
         if (selectedOption === null) {
           return; 
         }
-  
+
         setClickedAnswer(0);
   
         const updatedSelectedOptions = [...selectedOptions, selectedOption];
@@ -58,18 +54,7 @@ type QuizProps = {
         setSeconds(20);
       }, 600);
     }
-  
-    function restartGame() {
-      setScore(0);
-      setCurrentQues(0);
-      setRes(false);
-      setStartTimer(false);
-      setSelectedOption(null);
-      setSelectedOptions([]);
-      setCorrectAnswers([]);
-      navigate('/');
-    }
-  
+
     return (
       <>
         {res ? (
@@ -103,7 +88,7 @@ type QuizProps = {
             <ul>
               {questions[currentQues].options.map((option) => {
                 return (
-                  <li
+                  <li                   
                     onClick={() => {
                       handleAns(option.isCorrect);
                       setSelectedOption(option.id);

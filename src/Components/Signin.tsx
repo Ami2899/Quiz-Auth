@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { auth,provider } from './Config'
 import {signInWithPopup} from "firebase/auth"
 import { useNavigate } from 'react-router-dom'
+import "../App.css"
 
 type SignInProps={
     // isLoggedIn:boolean;
@@ -29,7 +30,7 @@ const Signin:React.FC<SignInProps> = ({setIsLoggedIn}) => {
 
   return (
     <div>
-      <button onClick={handleClick}>Sign in With Google</button>
+      <button onClick={handleClick} className='start-button'>Sign in With Google</button>
     </div>
   )
 }

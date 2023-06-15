@@ -1,7 +1,9 @@
 import {useNavigate} from "react-router-dom"
 import { useState } from "react";
 import { questions } from "../QuizData/QuizData";
-import { useEffect } from "react";
+import {getFirestore,addDoc,collection} from 'firebase/firestore'
+import {signOut} from "firebase/auth"
+import { auth } from "./Config";
 
 type ResultProps = {
   score: number;
@@ -11,7 +13,7 @@ type ResultProps = {
   correctAnswers: boolean[];
   setIsLoggedIn:React.Dispatch<React.SetStateAction<boolean>>;
   setStartTimer:React.Dispatch<React.SetStateAction<boolean>>;
-  startTimer:boolean
+  startTimer:boolean;
 };
 
 const Result: React.FC<ResultProps> = ({
@@ -25,22 +27,60 @@ const Result: React.FC<ResultProps> = ({
   startTimer
 }) => {
   const navigate = useNavigate();
+  const firestore = getFirestore();
+  
   const [showAnswers, setShowAnswers] = useState(false);
   
-  const restartGame = () => {
-    setScore(0);
-    navigate("/");
-    setIsLoggedIn(true)
+  const restartGame = async() => {
+    try{
+      const user = auth.currentUser;
+      if (user) {
+        const name = user.displayName || 'Anonymous';
+        const email = user.email || 'anonymous@example.com';
+        saveUserData(name, email, score);
+      }
+      setScore(0);
+      navigate("/");
+      setIsLoggedIn(true)
+    }catch(err){
+      console.log(err)
+    }
   };
 
   const handleShowAnswers = () => {
     setShowAnswers(true);
   };
 
-  const logout=()=>{
-   setScore(0)
-   setIsLoggedIn(false)
-   navigate("/")
+  const logout = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const name = user.displayName || 'Anonymous';
+        const email = user.email || 'anonymous@example.com';
+        saveUserData(name, email, score);
+      }
+      setScore(0);
+      setIsLoggedIn(false);
+      navigate('/');
+      await signOut(auth);
+      console.log('Log Out');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const saveUserData = async (name: string, email: string, score: number) => {
+    try {
+      const userRef = collection(firestore, 'user-score');
+      await addDoc(userRef, {
+        name: name,
+        email: email,
+        score: score,
+      });
+      console.log('User data saved successfully!');
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
   }
 
   return (
